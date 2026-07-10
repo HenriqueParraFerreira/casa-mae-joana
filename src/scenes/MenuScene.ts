@@ -122,6 +122,14 @@ export class MenuScene extends Phaser.Scene {
 
   private startLevel(n: number): void {
     this.ensureAudio();
+    // Celular/tablet: tela cheia de verdade (esconde a barra do Safari)
+    if (isTouchDevice(this) && this.scale.fullscreen.available && !this.scale.isFullscreen) {
+      try {
+        this.scale.startFullscreen();
+      } catch {
+        /* iOS antigo sem Fullscreen API: segue no navegador */
+      }
+    }
     this.scene.start('GameScene', { level: n });
   }
 }

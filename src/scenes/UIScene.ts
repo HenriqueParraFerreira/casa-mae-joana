@@ -62,6 +62,23 @@ export class UIScene extends Phaser.Scene {
       this.scene.pause('GameScene');
     });
 
+    // Botão de tela cheia (só em touch, quando o navegador suporta)
+    if (isTouchDevice(this) && this.scale.fullscreen.available) {
+      const fsBtn = this.add.text(GAME_W - 136, 36, '⛶', {
+        fontFamily: FONT, fontSize: '26px', fontStyle: 'bold', color: '#fff8e8',
+        stroke: '#241a1a', strokeThickness: 4, resolution: 2
+      }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+      fsBtn.on('pointerdown', () => {
+        sound.uiClick();
+        try {
+          if (this.scale.isFullscreen) this.scale.stopFullscreen();
+          else this.scale.startFullscreen();
+        } catch {
+          /* sem suporte: ignora */
+        }
+      });
+    }
+
     // Controles de toque (só em tablets/celulares)
     if (isTouchDevice(this)) createTouchControls(this);
 
