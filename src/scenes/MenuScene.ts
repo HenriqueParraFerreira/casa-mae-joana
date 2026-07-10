@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { CAT_KINDS, CAT_NAMES, FONT, GAME_H, GAME_W } from '../consts';
 import { sound } from '../audio/SoundEngine';
 import { SaveGame } from '../systems/SaveGame';
-import { setupHiResCamera } from '../systems/Effects';
+import { makeBubble, setupHiResCamera } from '../systems/Effects';
 import { isTouchDevice } from '../systems/TouchControls';
 import { LEVELS } from '../levels';
 
@@ -72,6 +72,25 @@ export class MenuScene extends Phaser.Scene {
     this.add.text(cx, 480, hint, {
       ...TXT, fontSize: '14px', color: '#f0e0c8', align: 'center', lineSpacing: 6
     }).setOrigin(0.5);
+
+    // iPhone sem Fullscreen API: ensina o caminho da tela cheia (modo app)
+    const isStandalone = ('standalone' in navigator) &&
+      (navigator as unknown as { standalone?: boolean }).standalone === true;
+    if (isTouchDevice(this) && !this.scale.fullscreen.available && !isStandalone) {
+      const hint2 = makeBubble(
+        this, cx, 552,
+        'Quer jogar em TELA CHEIA, sem a barra do navegador?\n' +
+        'Toque em Compartilhar (quadrado com seta) e escolha\n' +
+        '"Adicionar à Tela de Início" — o jogo vira um app!\n' +
+        '(toque aqui para fechar)',
+        0.97
+      );
+      const zone = this.add.zone(cx, 552, 520, 90).setInteractive();
+      zone.on('pointerdown', () => {
+        hint2.destroy();
+        zone.destroy();
+      });
+    }
 
     this.add.text(cx, GAME_H - 12, 'feito com Phaser, carinho e três gatos de verdade', {
       ...TXT, fontSize: '11px', color: '#d8c0a0'
