@@ -22,7 +22,25 @@
       #game {
         width: 100vw;
         height: 100vh;
+        height: 100dvh; /* iOS: altura real, sem a barra de endereço */
       }
+      #rotate-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        background: #14100f;
+        color: #ffe08a;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        font-size: 22px;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 16px;
+      }
+      #rotate-overlay .cat { font-size: 64px; }
       canvas {
         image-rendering: pixelated;
       }
@@ -30,6 +48,10 @@
   </head>
   <body>
     <div id="game"></div>
+    <div id="rotate-overlay">
+      <div class="cat">🙀</div>
+      <div>Gire o aparelho na horizontal<br/>para jogar!</div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

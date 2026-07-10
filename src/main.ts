@@ -36,3 +36,20 @@ declare global {
   interface Window { __game?: Phaser.Game }
 }
 window.__game = game;
+
+// iOS/Android: pede paisagem (o jogo é horizontal) e refaz o layout ao girar
+const rotateOverlay = document.getElementById('rotate-overlay');
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+function updateOrientation(): void {
+  if (rotateOverlay) {
+    const portrait = window.innerHeight > window.innerWidth;
+    rotateOverlay.style.display = portrait && isTouch ? 'flex' : 'none';
+  }
+  // A barra de endereço do iOS muda a altura útil: refaz o encaixe
+  setTimeout(() => game.scale.refresh(), 150);
+}
+
+window.addEventListener('resize', updateOrientation);
+window.addEventListener('orientationchange', updateOrientation);
+updateOrientation();

@@ -60,6 +60,29 @@ export function isTouchDevice(scene: Phaser.Scene): boolean {
   return scene.sys.game.device.input.touch;
 }
 
+/**
+ * Converte dicas escritas para teclado em dicas para os botões de toque.
+ * (As placas das fases são autoradas pensando no teclado.)
+ */
+export function adaptTextForTouch(text: string): string {
+  const swaps: [string, string][] = [
+    ['Ande com SETAS ou WASD', 'Ande com os botões ◀ e ▶'],
+    ['SETAS ou WASD', 'os botões ◀ ▶'],
+    ['Pule com ESPAÇO', 'Pule com o botão PULAR'],
+    ['ESPAÇO 2x no ar', 'PULAR 2x no ar'],
+    ['ESPAÇO', 'PULAR'],
+    ['Troque de gato:\n1, 2, 3 ou TAB', 'Troque de gato tocando\nnos retratos lá no alto!'],
+    ['1, 2, 3 ou TAB', 'os retratos no alto'],
+    ['aperte X', 'toque no botão X'],
+    ['aperte C', 'toque no botão C'],
+    ['com X!', 'com o botão X!'],
+    ['com X ', 'com o botão X ']
+  ];
+  let out = text;
+  for (const [from, to] of swaps) out = out.split(from).join(to);
+  return out;
+}
+
 function makeButton(
   scene: Phaser.Scene, x: number, y: number, r: number,
   label: string, fontSize: number, color: number,

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { FONT, GAME_H, GAME_W } from '../consts';
 import { sound } from '../audio/SoundEngine';
 import { setupHiResCamera } from '../systems/Effects';
+import { isTouchDevice } from '../systems/TouchControls';
 
 const TXT = { fontFamily: FONT, resolution: 2 };
 
@@ -48,16 +49,24 @@ export class PauseScene extends Phaser.Scene {
     this.add.text(cx, 385, '— controles —', {
       ...TXT, fontSize: '15px', color: '#8a6a4a'
     }).setOrigin(0.5);
-    this.add.text(cx, 490,
-      'SETAS ou WASD ........ andar\n' +
-      'ESPAÇO ............... pular\n' +
-      'X .......... habilidade do gato\n' +
-      'C .......... segunda habilidade\n' +
-      '1 / 2 / 3 ou TAB ...... trocar de gato\n' +
-      'M .................... som liga/desliga\n' +
-      'ESC .................. pausa', {
-        ...TXT, fontSize: '15px', color: '#3a2c22', lineSpacing: 8
-      }).setOrigin(0.5);
+    const controls = isTouchDevice(this)
+      ? '◀  ▶ ................. andar\n' +
+        'PULAR ................ pular\n' +
+        'X .......... habilidade do gato\n' +
+        'C .......... segunda habilidade\n' +
+        'retratos no alto ...... trocar de gato\n' +
+        'alto-falante ......... som liga/desliga\n' +
+        '❚❚ ................... pausa'
+      : 'SETAS ou WASD ........ andar\n' +
+        'ESPAÇO ............... pular\n' +
+        'X .......... habilidade do gato\n' +
+        'C .......... segunda habilidade\n' +
+        '1 / 2 / 3 ou TAB ...... trocar de gato\n' +
+        'M .................... som liga/desliga\n' +
+        'ESC .................. pausa';
+    this.add.text(cx, 490, controls, {
+      ...TXT, fontSize: '15px', color: '#3a2c22', lineSpacing: 8
+    }).setOrigin(0.5);
 
     this.input.keyboard?.on('keydown-ESC', () => this.resumeGame());
   }

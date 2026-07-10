@@ -3,6 +3,7 @@ import { CAT_KINDS, CAT_NAMES, FONT, GAME_H, GAME_W } from '../consts';
 import { sound } from '../audio/SoundEngine';
 import { SaveGame } from '../systems/SaveGame';
 import { setupHiResCamera } from '../systems/Effects';
+import { isTouchDevice } from '../systems/TouchControls';
 import { LEVELS } from '../levels';
 
 const TXT = { fontFamily: FONT, resolution: 2 };
@@ -65,10 +66,12 @@ export class MenuScene extends Phaser.Scene {
       if (!isOpen) this.add.image(bx + 66, 360, 'ui-lock').setScale(0.5);
     });
 
-    this.add.text(cx, 480,
-      'SETAS/WASD: andar    ESPAÇO: pular    X e C: habilidades\n1/2/3 ou TAB: trocar de gato    M: som    ESC: pausa', {
-        ...TXT, fontSize: '14px', color: '#f0e0c8', align: 'center', lineSpacing: 6
-      }).setOrigin(0.5);
+    const hint = isTouchDevice(this)
+      ? '◀ ▶ : andar    PULAR: pular    X e C: habilidades\nToque nos retratos para trocar de gato    ❚❚ : pausa'
+      : 'SETAS/WASD: andar    ESPAÇO: pular    X e C: habilidades\n1/2/3 ou TAB: trocar de gato    M: som    ESC: pausa';
+    this.add.text(cx, 480, hint, {
+      ...TXT, fontSize: '14px', color: '#f0e0c8', align: 'center', lineSpacing: 6
+    }).setOrigin(0.5);
 
     this.add.text(cx, GAME_H - 12, 'feito com Phaser, carinho e três gatos de verdade', {
       ...TXT, fontSize: '11px', color: '#d8c0a0'

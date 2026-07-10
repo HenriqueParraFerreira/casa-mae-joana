@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { ART_SCALE, DEPTH, GAME_H, TILE } from '../consts';
 import { makeBubble } from './Effects';
+import { adaptTextForTouch, isTouchDevice } from './TouchControls';
 import { Human } from '../entities/Human';
 import { Dog } from '../entities/Dog';
 import { Rat } from '../entities/Rat';
@@ -125,8 +126,10 @@ export function buildLevel(gctx: GameCtx, data: LevelData): BuiltLevel {
     floorY - 14
   ));
 
+  const touch = isTouchDevice(gctx);
   for (const s of data.signs) {
-    makeBubble(gctx, s.x * T, s.y * T, s.text, 0.92, s.w);
+    const text = touch ? adaptTextForTouch(s.text) : s.text;
+    makeBubble(gctx, s.x * T, s.y * T, text, 0.92, s.w);
   }
 
   // Saída
