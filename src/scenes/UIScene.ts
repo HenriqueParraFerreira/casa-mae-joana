@@ -3,6 +3,7 @@ import { CAT_KINDS, CAT_NAMES, EV, FONT, GAME_W, type CatKind } from '../consts'
 import { bus } from '../events';
 import { sound } from '../audio/SoundEngine';
 import { setupHiResCamera } from '../systems/Effects';
+import { createTouchControls, isTouchDevice } from '../systems/TouchControls';
 
 interface Portrait {
   frame: Phaser.GameObjects.Graphics;
@@ -49,6 +50,20 @@ export class UIScene extends Phaser.Scene {
       sound.unlock();
       bus.emit(EV.MUTE_CHANGED, sound.toggleMute());
     });
+
+    // Botão de pausa (essencial no touch; inofensivo no desktop)
+    const pauseBtn = this.add.text(GAME_W - 88, 36, '❚❚', {
+      fontFamily: FONT, fontSize: '22px', fontStyle: 'bold', color: '#fff8e8',
+      stroke: '#241a1a', strokeThickness: 4, resolution: 2
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    pauseBtn.on('pointerdown', () => {
+      sound.uiClick();
+      this.scene.launch('PauseScene', { level: data.levelId });
+      this.scene.pause('GameScene');
+    });
+
+    // Controles de toque (só em tablets/celulares)
+    if (isTouchDevice(this)) createTouchControls(this);
 
     // Nome da fase (some sozinho)
     const title = this.add.text(GAME_W / 2, 60, `Fase ${data.levelId} — ${data.levelName}`, {

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { ART_SCALE, CAT_NAMES, DEPTH, type CatKind } from '../consts';
 import { sound } from '../audio/SoundEngine';
 import { burst, floatBubble, jumpStretch, landSquash } from '../systems/Effects';
-import { holdLeft, holdRight, justJump, type GameKeys } from '../systems/Controls';
+import { holdLeft, holdRight, justC, justJump, justX, type GameKeys } from '../systems/Controls';
 import type { GameCtx } from '../systems/GameCtx';
 import type { Human } from './Human';
 
@@ -104,12 +104,12 @@ export abstract class Cat extends Phaser.Physics.Arcade.Sprite {
 
     if (justJump(keys)) this.tryJump();
 
-    // Habilidades com cooldown
-    if (Phaser.Input.Keyboard.JustDown(keys.x) && time >= this.nextX) {
+    // Habilidades com cooldown (teclado ou botões de toque)
+    if (justX(keys) && time >= this.nextX) {
       this.nextX = time + this.cooldownX;
       this.useX(time);
     }
-    if (Phaser.Input.Keyboard.JustDown(keys.c) && time >= this.nextC) {
+    if (justC(keys) && time >= this.nextC) {
       this.nextC = time + this.cooldownC;
       this.useC(time);
     }

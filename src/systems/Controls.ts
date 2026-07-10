@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { touchJustC, touchJustJump, touchJustX, touchState } from './TouchControls';
 
 export interface GameKeys {
   left: Phaser.Input.Keyboard.Key;
@@ -49,15 +50,24 @@ export function createKeys(scene: Phaser.Scene): GameKeys {
 }
 
 export function holdLeft(k: GameKeys): boolean {
-  return k.left.isDown || k.a.isDown;
+  return k.left.isDown || k.a.isDown || touchState.left;
 }
 
 export function holdRight(k: GameKeys): boolean {
-  return k.right.isDown || k.d.isDown;
+  return k.right.isDown || k.d.isDown || touchState.right;
 }
 
 export function justJump(k: GameKeys): boolean {
   return Phaser.Input.Keyboard.JustDown(k.space) ||
     Phaser.Input.Keyboard.JustDown(k.up) ||
-    Phaser.Input.Keyboard.JustDown(k.w);
+    Phaser.Input.Keyboard.JustDown(k.w) ||
+    touchJustJump();
+}
+
+export function justX(k: GameKeys): boolean {
+  return Phaser.Input.Keyboard.JustDown(k.x) || touchJustX();
+}
+
+export function justC(k: GameKeys): boolean {
+  return Phaser.Input.Keyboard.JustDown(k.c) || touchJustC();
 }

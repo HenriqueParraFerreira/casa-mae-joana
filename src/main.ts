@@ -16,6 +16,7 @@ const game = new Phaser.Game({
   backgroundColor: '#14100f',
   pixelArt: true,
   roundPixels: true,
+  input: { activePointers: 4 },
   physics: {
     default: 'arcade',
     arcade: {
