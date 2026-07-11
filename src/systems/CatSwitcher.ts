@@ -3,7 +3,7 @@ import { EV } from '../consts';
 import { bus } from '../events';
 import { sound } from '../audio/SoundEngine';
 import { floatBubble } from './Effects';
-import { gameplayZoom } from './TouchControls';
+import { gameplayZoom, isTouchDevice } from './TouchControls';
 import type { GameKeys } from './Controls';
 import type { Cat } from '../entities/Cat';
 
@@ -15,13 +15,16 @@ export class CatSwitcher {
   private scene: Phaser.Scene;
   readonly cats: Cat[];
   activeIdx = 0;
+  private followOffsetY = 0;
 
   constructor(scene: Phaser.Scene, cats: Cat[]) {
     this.scene = scene;
     this.cats = cats;
     cats[0].isActiveCat = true;
     const cam = scene.cameras.main;
-    cam.startFollow(cats[0], true, 0.12, 0.12);
+    // No celular (zoom alto) a câmera mira acima do gato para caberem as dicas
+    this.followOffsetY = isTouchDevice(scene) ? 60 : 0;
+    cam.startFollow(cats[0], true, 0.12, 0.12, 0, this.followOffsetY);
     bus.emit(EV.CAT_SWITCHED, cats[0].kind);
   }
 
@@ -64,8 +67,8 @@ export class CatSwitcher {
     // Câmera desliza suave até o novo gato + pulso de zoom
     const cam = this.scene.cameras.main;
     cam.stopFollow();
-    cam.pan(cat.x, cat.y, 380, 'Sine.easeInOut', false, (_c, progress) => {
-      if (progress === 1) cam.startFollow(cat, true, 0.12, 0.12);
+    cam.pan(cat.x, cat.y - this.followOffsetY, 380, 'Sine.easeInOut', false, (_c, progress) => {
+      if (progress === 1) cam.startFollow(cat, true, 0.12, 0.12, 0, this.followOffsetY);
     });
     const z = gameplayZoom(this.scene);
     this.scene.tweens.add({

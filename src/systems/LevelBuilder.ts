@@ -127,10 +127,13 @@ export function buildLevel(gctx: GameCtx, data: LevelData): BuiltLevel {
   ));
 
   const touch = isTouchDevice(gctx);
-  for (const s of data.signs) {
+  data.signs.forEach((s, i) => {
     const text = touch ? adaptTextForTouch(s.text) : s.text;
-    makeBubble(gctx, s.x * T, s.y * T, text, 0.92, s.w);
-  }
+    // No celular o enquadramento é bem mais fechado: reorganiza TODAS
+    // as placas em duas fileiras alternadas dentro da faixa visível
+    const sy = touch ? (i % 2 === 0 ? 15.2 : 16.7) : s.y;
+    makeBubble(gctx, s.x * T, sy * T, text, 0.92, s.w);
+  });
 
   // Saída
   const exitRect = new Phaser.Geom.Rectangle(data.exit.x * T, data.exit.y * T, data.exit.w * T, data.exit.h * T);

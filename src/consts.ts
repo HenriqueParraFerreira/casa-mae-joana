@@ -1,8 +1,24 @@
 /** Versão mostrada no menu — atualizar a cada deploy relevante. */
-export const GAME_VERSION = 'v1.5';
+export const GAME_VERSION = 'v1.6';
 
 export const TILE = 32;
-export const GAME_W = 1280;
+
+/**
+ * Largura lógica adaptável: em celular/tablet o canvas nasce com a
+ * proporção exata da tela (sem faixas pretas laterais); no desktop
+ * mantém o clássico 1280x720. Calculada uma vez, no carregamento.
+ */
+function computeGameWidth(): number {
+  if (typeof window === 'undefined') return 1280;
+  const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints ?? 0) > 0;
+  if (!isTouch) return 1280;
+  const long = Math.max(window.innerWidth, window.innerHeight);
+  const short = Math.max(1, Math.min(window.innerWidth, window.innerHeight));
+  const aspect = Math.min(2.34, Math.max(16 / 9, long / short));
+  return Math.round((720 * aspect) / 2) * 2;
+}
+
+export const GAME_W = computeGameWidth();
 export const GAME_H = 720;
 export const GRAVITY = 1000;
 /**
@@ -15,8 +31,8 @@ export const BASE_ZOOM = 2;
 export const ART_SCALE = 0.5;
 /** Zoom extra da câmera durante a gameplay no computador. */
 export const GAMEPLAY_ZOOM = 1.3;
-/** Zoom extra no celular/tablet: tela pequena pede tudo 2x maior. */
-export const MOBILE_GAMEPLAY_ZOOM = 2.0;
+/** Zoom extra no celular/tablet: tela pequena pede tudo bem maior. */
+export const MOBILE_GAMEPLAY_ZOOM = 3.0;
 
 export type CatKind = 'mia' | 'zorro' | 'macchia';
 export const CAT_KINDS: CatKind[] = ['mia', 'zorro', 'macchia'];

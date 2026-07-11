@@ -20,11 +20,11 @@ export class VictoryScene extends Phaser.Scene {
     bg.fillRect(0, 0, GAME_W, GAME_H);
     this.add.image(cx, 150, 'sun').setScale(1.6);
     this.add.tileSprite(0, GAME_H - 96, GAME_W, 96, 'tile-grass').setOrigin(0, 0).setTileScale(0.5);
-    for (let i = 0; i < 12; i++) {
-      this.add.image(60 + i * 110, GAME_H - 96, 'fence').setOrigin(0.5, 1).setScale(0.5);
+    for (let x = 60, i = 0; x < GAME_W; x += 110, i++) {
+      this.add.image(x, GAME_H - 96, 'fence').setOrigin(0.5, 1).setScale(0.5);
     }
-    for (let i = 0; i < 8; i++) {
-      this.add.image(90 + i * 160, GAME_H - 88, `flower-${i % 2}`).setOrigin(0.5, 1).setScale(0.5);
+    for (let x = 90, i = 0; x < GAME_W; x += 160, i++) {
+      this.add.image(x, GAME_H - 88, `flower-${i % 2}`).setOrigin(0.5, 1).setScale(0.5);
     }
     // Toalha da soneca
     const towel = this.add.tileSprite(cx - 180, GAME_H - 110, 360, 14, 'tile-carpet')
