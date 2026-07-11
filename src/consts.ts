@@ -1,5 +1,5 @@
 /** Versão mostrada no menu — atualizar a cada deploy relevante. */
-export const GAME_VERSION = 'v1.4';
+export const GAME_VERSION = 'v1.5';
 
 export const TILE = 32;
 export const GAME_W = 1280;
@@ -13,10 +13,10 @@ export const GRAVITY = 1000;
  */
 export const BASE_ZOOM = 2;
 export const ART_SCALE = 0.5;
-/** Zoom extra da câmera durante a gameplay (1 = enquadramento original). */
+/** Zoom extra da câmera durante a gameplay no computador. */
 export const GAMEPLAY_ZOOM = 1.3;
-/** Zoom total da câmera do jogo. */
-export const GAME_ZOOM = BASE_ZOOM * GAMEPLAY_ZOOM;
+/** Zoom extra no celular/tablet: tela pequena pede tudo 2x maior. */
+export const MOBILE_GAMEPLAY_ZOOM = 2.0;
 
 export type CatKind = 'mia' | 'zorro' | 'macchia';
 export const CAT_KINDS: CatKind[] = ['mia', 'zorro', 'macchia'];

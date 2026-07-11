@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
-import { EV, GAME_H, GAME_ZOOM } from '../consts';
+import { EV, GAME_H } from '../consts';
 import { bus } from '../events';
 import { sound } from '../audio/SoundEngine';
 import { SaveGame } from '../systems/SaveGame';
 import { LEVELS } from '../levels';
 import { buildLevel } from '../systems/LevelBuilder';
 import { createKeys, type GameKeys } from '../systems/Controls';
+import { gameplayZoom } from '../systems/TouchControls';
 import { CatSwitcher } from '../systems/CatSwitcher';
 import { CheckpointSystem } from '../systems/CheckpointSystem';
 import { burst, fadeIn, irisOut } from '../systems/Effects';
@@ -55,7 +56,7 @@ export class GameScene extends Phaser.Scene implements GameCtx {
     const worldW = this.levelData.widthTiles * 32;
     this.physics.world.setBounds(0, 0, worldW, GAME_H);
     this.cameras.main.setBounds(0, 0, worldW, GAME_H);
-    this.cameras.main.setZoom(GAME_ZOOM);
+    this.cameras.main.setZoom(gameplayZoom(this));
 
     const built = buildLevel(this, this.levelData);
     this.humans = built.humans;

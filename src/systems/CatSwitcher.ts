@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
-import { EV, GAME_ZOOM } from '../consts';
+import { EV } from '../consts';
 import { bus } from '../events';
 import { sound } from '../audio/SoundEngine';
 import { floatBubble } from './Effects';
+import { gameplayZoom } from './TouchControls';
 import type { GameKeys } from './Controls';
 import type { Cat } from '../entities/Cat';
 
@@ -66,13 +67,14 @@ export class CatSwitcher {
     cam.pan(cat.x, cat.y, 380, 'Sine.easeInOut', false, (_c, progress) => {
       if (progress === 1) cam.startFollow(cat, true, 0.12, 0.12);
     });
+    const z = gameplayZoom(this.scene);
     this.scene.tweens.add({
       targets: cam,
-      zoom: GAME_ZOOM * 1.05,
+      zoom: z * 1.05,
       duration: 200,
       yoyo: true,
       ease: 'Sine.easeInOut',
-      onComplete: () => cam.setZoom(GAME_ZOOM)
+      onComplete: () => cam.setZoom(z)
     });
   }
 

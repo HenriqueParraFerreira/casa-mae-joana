@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { FONT, GAME_H, GAME_W } from '../consts';
+import { BASE_ZOOM, FONT, GAME_H, GAME_W, GAMEPLAY_ZOOM, MOBILE_GAMEPLAY_ZOOM } from '../consts';
 
 /**
  * Controles de toque para tablets/celulares: ◀ ▶ segurados para andar,
@@ -58,6 +58,11 @@ export function touchJustC(): boolean {
 
 export function isTouchDevice(scene: Phaser.Scene): boolean {
   return scene.sys.game.device.input.touch;
+}
+
+/** Zoom total da câmera de gameplay conforme o dispositivo. */
+export function gameplayZoom(scene: Phaser.Scene): number {
+  return BASE_ZOOM * (isTouchDevice(scene) ? MOBILE_GAMEPLAY_ZOOM : GAMEPLAY_ZOOM);
 }
 
 /**
