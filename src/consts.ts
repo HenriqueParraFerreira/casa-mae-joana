@@ -1,3 +1,6 @@
+/** Versão mostrada no menu — atualizar a cada deploy relevante. */
+export const GAME_VERSION = 'v1.4';
+
 export const TILE = 32;
 export const GAME_W = 1280;
 export const GAME_H = 720;

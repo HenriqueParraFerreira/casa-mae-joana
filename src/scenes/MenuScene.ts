@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { CAT_KINDS, CAT_NAMES, FONT, GAME_H, GAME_W } from '../consts';
+import { CAT_KINDS, CAT_NAMES, FONT, GAME_H, GAME_VERSION, GAME_W } from '../consts';
 import { sound } from '../audio/SoundEngine';
 import { SaveGame } from '../systems/SaveGame';
 import { makeBubble, setupHiResCamera } from '../systems/Effects';
@@ -73,10 +73,17 @@ export class MenuScene extends Phaser.Scene {
       ...TXT, fontSize: '14px', color: '#f0e0c8', align: 'center', lineSpacing: 6
     }).setOrigin(0.5);
 
-    // iPhone sem Fullscreen API: ensina o caminho da tela cheia (modo app)
-    const isStandalone = ('standalone' in navigator) &&
-      (navigator as unknown as { standalone?: boolean }).standalone === true;
-    if (isTouchDevice(this) && !this.scale.fullscreen.available && !isStandalone) {
+    // iPhone: o Safari DIZ que tem tela cheia mas falha em silêncio.
+    // Então no iOS, fora do modo app, sempre ensinamos o caminho.
+    const nav = navigator as unknown as { standalone?: boolean; maxTouchPoints?: number };
+    const isIOS = /iPhone|iPod|iPad/.test(navigator.userAgent) ||
+      (/Macintosh/.test(navigator.userAgent) && (nav.maxTouchPoints ?? 0) > 1);
+    const isStandalone = nav.standalone === true ||
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: fullscreen)').matches;
+    const needsAppHint = isIOS ? !isStandalone
+      : (isTouchDevice(this) && !this.scale.fullscreen.available && !isStandalone);
+    if (needsAppHint) {
       const hint2 = makeBubble(
         this, cx, 552,
         'Quer jogar em TELA CHEIA, sem a barra do navegador?\n' +
@@ -95,6 +102,10 @@ export class MenuScene extends Phaser.Scene {
     this.add.text(cx, GAME_H - 12, 'feito com Phaser, carinho e três gatos de verdade', {
       ...TXT, fontSize: '11px', color: '#d8c0a0'
     }).setOrigin(0.5, 1);
+    // Selo de versão: tira a dúvida de "qual versão está rodando?"
+    this.add.text(GAME_W - 8, GAME_H - 8, GAME_VERSION, {
+      ...TXT, fontSize: '12px', fontStyle: 'bold', color: '#ffe08a'
+    }).setOrigin(1, 1);
 
     // Áudio precisa de um gesto do usuário
     this.input.once('pointerdown', () => this.ensureAudio());
